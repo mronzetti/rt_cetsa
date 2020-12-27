@@ -28,7 +28,8 @@ for (i in 3:ncol(raw_df)) {
 }
 for (i in 1:nrow(model_df)) {
   temp_df <-
-    filter(raw_df, raw_df$compound_id == model_df$compound[(i)])
+    filter(raw_df, raw_df$compound_id == model_df$compound[(i)]) %>%
+    dplyr::select(!'BS_factor')
   print(paste('Analyzing: ', model_df$compound[i]), sep = '')
   for (n in 3:ncol(temp_df)) {
     dr_df <- temp_df %>% dplyr::select(c(2, n))
@@ -45,7 +46,14 @@ for (i in 1:nrow(model_df)) {
         geom_point() +
         geom_ribbon(data=pred.fit,aes(x=pr.x,y=p,ymin=pmin,ymax=pmax),alpha=0.2) +
         geom_line(data=pred.fit,aes(x=pr.x,y=p)) +
-        scale_x_log10()
+        scale_x_log10() +
+        theme_cowplot() +
+        labs(
+          title=paste('Analysis of ',model_df$compound[i],' by ',colnames(temp_df)[n],sep=''),
+          subtitle=paste('EC50: ',signif(temp.model$coefficients[4],3),' nM',sep=''),
+          y='',
+          x='Concentration'
+        )
       print(dr_plot)
     }
   }
