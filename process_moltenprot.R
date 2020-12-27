@@ -24,19 +24,19 @@ col_by_row <-
 #
 # Read in 4 experimental files from MoltenProt readout
 exp1_param <-
-  read_excel('./data/cleaned_expt1/Signal_resources/Signal_results.xlsx',
+  read_excel('./data/exp1/Signal_results.xlsx',
              sheet = 'Fit parameters') %>%
   select(-c('Condition'))
 exp2_param <-
-  read_excel('./data/cleaned_expt2/Signal_resources/Signal_results.xlsx',
+  read_excel('./data/exp2/Signal_results.xlsx',
              sheet = 'Fit parameters') %>%
   select(-c('Condition'))
 exp3_param <-
-  read_excel('./data/cleaned_expt3/Signal_resources/Signal_results.xlsx',
+  read_excel('./data/exp3/Signal_results.xlsx',
              sheet = 'Fit parameters') %>%
   select(-c('Condition'))
 exp4_param <-
-  read_excel('./data/cleaned_expt4/Signal_resources/Signal_results.xlsx',
+  read_excel('./data/exp4/Signal_results.xlsx',
              sheet = 'Fit parameters') %>%
   select(-c('Condition'))
 # Reformat ID column in each exp from MoltenProt format (A1, not A01) to arrange
@@ -89,18 +89,18 @@ write.csv(exp_param_full, './data/exp_parameters.csv', row.names = FALSE)
 #
 # Read in 4 experimental files from MoltenProt readout
 exp1_curve <-
-  read_excel('./data/cleaned_expt1/Signal_resources/Signal_results.xlsx',
+  read_excel('./data/exp1/Signal_results.xlsx',
              sheet = 'Baseline-corrected')
 exp2_curve <-
-  read_excel('./data/cleaned_expt2/Signal_resources/Signal_results.xlsx',
+  read_excel('./data/exp2/Signal_results.xlsx',
              sheet = 'Baseline-corrected') %>%
   select(-c('Temperature'))
 exp3_curve <-
-  read_excel('./data/cleaned_expt3/Signal_resources/Signal_results.xlsx',
+  read_excel('./data/exp3/Signal_results.xlsx',
              sheet = 'Baseline-corrected') %>%
   select(-c('Temperature'))
 exp4_curve <-
-  read_excel('./data/cleaned_expt4/Signal_resources/Signal_results.xlsx',
+  read_excel('./data/exp4/Signal_results.xlsx',
              sheet = 'Baseline-corrected') %>%
   select(-c('Temperature'))
 exp_curve_all <-
