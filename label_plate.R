@@ -21,7 +21,7 @@ grid_96w <- expand.grid(row = LETTERS[1:8], col = c(1:12)) %>%
   select(-c('row', 'col'))
 # Read in matlab file, drop well/col values, and prepare to assign wells
 df <- read_excel(
-  "./data/matlab_530.xlsx",
+  "./data/rtcetsa_raw.xlsx",
   sheet = "Sheet1",
   col_names = FALSE,
   .name_repair = "unique"
