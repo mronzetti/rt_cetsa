@@ -8,7 +8,8 @@
 
 Description of files
 ____________________________________________________________________________________
-1_ label_plate
- |_ Takes in raw matlab files from RT_CETSA experiments and cleans/arranges them for analysis
-    in moltenprot software.
-2_  
+1_  label_plate
+  |_  Takes in raw matlab files from RT_CETSA experiments and cleans/arranges them for analysis
+      in moltenprot software.
+2_  process_moltenprot
+  |_  Retrieves data from moltenprot analysis folders/files and processes/tidies them for additional analysis.
