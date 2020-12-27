@@ -6,8 +6,11 @@
 # #  dP     dP    dP              Y88888P'  88888888P    dP     Y88888P  88     88
 # # oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 # #
-# # Preparation of microplate file from MatLab readout
-# # 
+# # Preparation of microplate file from MatLab readout to 4x96 well plates ready
+# # for moltenprot analysis.
+# #
+# # Plates are prepared going by well index [1-384].
+# #
 # # Michael Ronzetti
 library(tidyverse)
 library(readxl)
@@ -18,14 +21,14 @@ grid_96w <- expand.grid(row = LETTERS[1:8], col = c(1:12)) %>%
   select(-c('row', 'col'))
 # Read in matlab file, drop well/col values, and prepare to assign wells
 df <- read_excel(
-  "matlab_530.xlsx",
+  "./data/matlab_530.xlsx",
   sheet = "Sheet1",
   col_names = FALSE,
   .name_repair = "unique"
 ) %>%
   select(-c('...1', '...2')) %>%
   rownames_to_column() %>% rename('well' = 'rowname')
-# Construct r-friendly column names from temperature
+# Construct r-friendly column names from temperature to 't_n'
 tracker <- 1
 for (val in 2:ncol(df) - 1) {
   names(df)[val + 1] <- paste('t_', val, sep = '')
@@ -67,7 +70,7 @@ for (val in 1:nrow(grid_96w)) {
   colnames(q4)[val + 1] <- grid_96w$address[val]
   tracker <- tracker + 1
 }
-write.csv(q1, 'cleaned_expt1.csv', row.names = FALSE)
-write.csv(q2, 'cleaned_expt2.csv', row.names = FALSE)
-write.csv(q3, 'cleaned_expt3.csv', row.names = FALSE)
-write.csv(q4, 'cleaned_expt4.csv', row.names = FALSE)
+write.csv(q1, './data/cleaned_expt1.csv', row.names = FALSE)
+write.csv(q2, './data/cleaned_expt2.csv', row.names = FALSE)
+write.csv(q3, './data/cleaned_expt3.csv', row.names = FALSE)
+write.csv(q4, './data/cleaned_expt4.csv', row.names = FALSE)
