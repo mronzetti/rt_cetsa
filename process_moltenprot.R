@@ -24,19 +24,19 @@ col_by_row <-
 #
 # Read in 4 experimental files from MoltenProt readout
 exp1_param <-
-  read_excel('./cleaned_expt1/Signal_resources/Signal_results.xlsx',
+  read_excel('./data/cleaned_expt1/Signal_resources/Signal_results.xlsx',
              sheet = 'Fit parameters') %>%
   select(-c('Condition'))
 exp2_param <-
-  read_excel('./cleaned_expt2/Signal_resources/Signal_results.xlsx',
+  read_excel('./data/cleaned_expt2/Signal_resources/Signal_results.xlsx',
              sheet = 'Fit parameters') %>%
   select(-c('Condition'))
 exp3_param <-
-  read_excel('./cleaned_expt3/Signal_resources/Signal_results.xlsx',
+  read_excel('./data/cleaned_expt3/Signal_resources/Signal_results.xlsx',
              sheet = 'Fit parameters') %>%
   select(-c('Condition'))
 exp4_param <-
-  read_excel('./cleaned_expt4/Signal_resources/Signal_results.xlsx',
+  read_excel('./data/cleaned_expt4/Signal_resources/Signal_results.xlsx',
              sheet = 'Fit parameters') %>%
   select(-c('Condition'))
 # Reformat ID column in each exp from MoltenProt format (A1, not A01) to arrange
@@ -84,23 +84,23 @@ for (val in letter) {
     tracker <- tracker + 1
   }
 }
-write.csv(exp_param_full, './exp_parameters.csv', row.names = FALSE)
+write.csv(exp_param_full, './data/exp_parameters.csv', row.names = FALSE)
 # Gather baseline-corrected fit curves for 384-well plate and pivot plate.
 #
 # Read in 4 experimental files from MoltenProt readout
 exp1_curve <-
-  read_excel('./cleaned_expt1/Signal_resources/Signal_results.xlsx',
+  read_excel('./data/cleaned_expt1/Signal_resources/Signal_results.xlsx',
              sheet = 'Baseline-corrected')
 exp2_curve <-
-  read_excel('./cleaned_expt2/Signal_resources/Signal_results.xlsx',
+  read_excel('./data/cleaned_expt2/Signal_resources/Signal_results.xlsx',
              sheet = 'Baseline-corrected') %>%
   select(-c('Temperature'))
 exp3_curve <-
-  read_excel('./cleaned_expt3/Signal_resources/Signal_results.xlsx',
+  read_excel('./data/cleaned_expt3/Signal_resources/Signal_results.xlsx',
              sheet = 'Baseline-corrected') %>%
   select(-c('Temperature'))
 exp4_curve <-
-  read_excel('./cleaned_expt4/Signal_resources/Signal_results.xlsx',
+  read_excel('./data/cleaned_expt4/Signal_resources/Signal_results.xlsx',
              sheet = 'Baseline-corrected') %>%
   select(-c('Temperature'))
 exp_curve_all <-
@@ -126,15 +126,15 @@ for (val in letter) {
     tracker <- tracker + 1
   }
 }
-write.csv(exp_curve_all, './exp_curvefit.csv', row.names = FALSE)
+write.csv(exp_curve_all, './data/exp_curvefit.csv', row.names = FALSE)
 # Attach platemap to assign ID, conc, and pivot
 #
 # Read in platemap ID sheet and replace empty with DMSO, pivot both conc and id long
-id_df <- read_excel('./platemap.xlsx', sheet = 'sample') %>%
+id_df <- read_excel('./data/platemap.xlsx', sheet = 'sample') %>%
   select(-1) %>%
   pivot_longer(., cols = 1:ncol(.))
 id_df$value <- gsub('empty', 'DMSO', id_df$value)
-conc_df <- read_excel('./platemap.xlsx', sheet = 'conc') %>%
+conc_df <- read_excel('./data/platemap.xlsx', sheet = 'conc') %>%
   select(-1) %>%
   pivot_longer(., cols = 1:ncol(.))
 # Construct the full experimental details file and export to csv
@@ -162,4 +162,4 @@ for(i in 2:ncol(auc_df)){
   auc_vals$vals[(i-1)] <- computeAUC(temp_df[,1],temp_df[,2],viability_as_pct = FALSE,verbose=FALSE)
 }
 full_df <- full_df %>% cbind(.,auc_vals) %>% rename(auc=vals)
-write.csv(full_df, './exp_fulldata.csv', row.names = FALSE)
+write.csv(full_df, './data/fullexpdata.csv', row.names = FALSE)

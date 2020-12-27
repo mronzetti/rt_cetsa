@@ -18,7 +18,7 @@ library(cowplot)
 library(ggrepel)
 #
 # Read in full experimental data and prepare tibble for statistical tests
-raw_df <- read.csv('./exp_fulldata.csv')
+raw_df <- read.csv('./data/fullexpdata.csv')
 analysis_df <-
   tibble(
     measurement = colnames(raw_df[6:length(colnames(raw_df))]),
@@ -45,7 +45,7 @@ for (i in 6:ncol(raw_df)) {
 #Add bool for measurements that are above Z' of 0.5
 analysis_df <- analysis_df %>%
   mutate(zprime_check = ifelse(zprime >= 0.5, TRUE, FALSE))
-write.csv(analysis_df,'./analysis.csv')
+write.csv(analysis_df,'./data/assayanalysis.csv')
 #
 # Plot of the Z' values against each analysis type
 #
