@@ -20,11 +20,13 @@ R Packages
 ________________________________________________________________________________________
 Description of files
 
-1_  label_plate
+1_  label_plate.R
   |_  Takes in raw matlab files from RT_CETSA experiments and cleans/arranges them for analysis
       in moltenprot software.
-2_  process_moltenprot
+2_  process_moltenprot.R
   |_  Retrieves data from moltenprot analysis folders/files and processes/tidies them for additional analysis.
+3_  analysis.R
+  |_  Analysis of 
   
 ________________________________________________________________________________________
 References

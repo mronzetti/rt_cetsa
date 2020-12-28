@@ -29,7 +29,8 @@ for (i in 3:ncol(raw_df)) {
 }
 modelfit_df <- tibble(colnames(model_df)[2:ncol(model_df)])
 names(modelfit_df)[1] <- 'analysis'
-modelfit_df <- modelfit_df
+modelfit_df <- modelfit_df %>%
+  filter(analysis != 'BS_factor')
 for (i in 1:nrow(model_df)) {
   temp_df <-
     filter(raw_df, raw_df$compound_id == model_df$compound[(i)]) %>%
@@ -113,10 +114,20 @@ for (i in 1:nrow(model_df)) {
       )
       print(dr_plot)
       dev.off()
-      temp_modelfit_df$ic50[n - 2] <-
+      print(n)
+      temp_modelfit_df$ic50[(n-2)] <-
         signif(temp.model$coefficients[4], 3)
-      temp_modelfit_df$noEffect[n - 2] <-
+      temp_modelfit_df$noEffect[(n-2)] <-
         signif(noEffect(temp.model)[3], 3)
+      print(paste('******  ',colnames(temp_df)[n],'  ******',sep=''))
+      print(paste('IC50: ', signif(temp.model$coefficients[4], 3), sep =
+                    ''))
+      if (signif(noEffect(temp.model)[3], 3) < 0.01) {
+        print(paste('noEffect: ', signif(noEffect(temp.model)[3], 3), ' (PASS)', sep = ''))
+      } 
+      else {
+        print(paste('noEffect: ', signif(noEffect(temp.model)[3], 3), ' (FAIL)', sep = ''))
+      }
     }
   }
   modelfit_df <- modelfit_df %>%
