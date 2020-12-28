@@ -36,7 +36,8 @@ for (i in 1:nrow(model_df)) {
     dplyr::select(!'BS_factor')
   print(paste('Analyzing: ', model_df$compound[i]), sep = '')
   temp_modelfit_df <- modelfit_df[1] %>%
-    mutate(ic50 = 0, noEffect = 0)
+    mutate(ic50 = 0, noEffect = 0) %>%
+    filter(.,analysis != 'BS_factor')
   for (n in 3:ncol(temp_df)) {
     dr_df <- temp_df %>% dplyr::select(c(2, n))
     colnames(dr_df)[1] <- 'conc'
