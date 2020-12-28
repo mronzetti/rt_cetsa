@@ -25,7 +25,6 @@ model_df <-
 for (i in 3:ncol(raw_df)) {
   col.nm <- colnames(raw_df)[i]
   model_df[, col.nm] <- NA
-  print(col.nm)
 }
 modelfit_df <- tibble(colnames(model_df)[2:ncol(model_df)])
 names(modelfit_df)[1] <- 'analysis'
