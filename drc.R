@@ -13,6 +13,7 @@ library(tidyverse)
 library(drc)
 library(ggbeeswarm)
 library(cowplot)
+library(viridis)
 library(ggrepel)
 dir.create('./data/dr_curves/')
 #Read in experimental file
@@ -58,7 +59,7 @@ for (i in 1:nrow(model_df)) {
         dr_df[1]
       )), log(max(
         dr_df[1]
-      )), length = 10000)))
+      )), length = 1000)))
     if ("convergence" %in% names(temp.model) == FALSE) {
       pm <-
         predict(object = temp.model,
@@ -68,16 +69,8 @@ for (i in 1:nrow(model_df)) {
       pred.fit$pmin <- pm[, 2]
       pred.fit$pmax <- pm[, 3]
       dr_plot <- ggplot(dr_df, aes(x = conc, y = resp)) +
-        geom_point() +
-        geom_ribbon(data = pred.fit,
-                    aes(
-                      x = pr.x,
-                      y = p,
-                      ymin = pmin,
-                      ymax = pmax
-                    ),
-                    alpha = 0.2) +
-        geom_line(data = pred.fit, aes(x = pr.x, y = p)) +
+        geom_line(data = pred.fit, aes(x = pr.x, y = p),size=1.5,color='black') +
+        geom_point(size=4,shape=21,fill='orange',color='black') +
         scale_x_log10() +
         theme_cowplot() +
         labs(
@@ -137,3 +130,51 @@ for (i in 1:nrow(model_df)) {
   names(modelfit_df)[names(modelfit_df) == 'noEffect'] <-
     paste('noEffect_', model_df$compound[i], sep = '')
 }
+write.csv(modelfit_df,'./data/modelfit_params.csv',row.names = FALSE)
+
+# Assay wide plots
+ic50_df <- modelfit_df %>%
+  dplyr::select(starts_with('analysis') | starts_with('ic50'))
+names(ic50_df) <- gsub(pattern='ic50_',replacement='',x=names(ic50_df))
+ic50_df <- ic50_df %>%
+  filter(str_detect(analysis,'val')) %>%
+  pivot_longer(!analysis) %>%
+  filter(value<10000) %>%
+  mutate(value=log(value,10))
+ic50_df$name <- gsub('[[:punct:]]','-',ic50_df$name)
+ic50_distribution <- ggplot(ic50_df,aes(x=analysis,y=name,fill=value)) +
+  geom_tile() +
+  scale_fill_viridis(discrete=FALSE,direction = -1)
+print(ic50_distribution)
+
+noEffect_df <- read.csv('./data/modelfit_params.csv') %>%
+  dplyr::select(starts_with('analysis') | starts_with('noEffect'))
+names(noEffect_df) <- gsub(pattern='noEffect_',replacement='',x=names(noEffect_df))
+noEffect_df <- noEffect_df %>%
+  pivot_longer(!analysis) %>%
+  mutate(value=log(value,10))
+noEffect_df$name <- gsub('[[:punct:]]','-',noEffect_df$name)
+noEff_distribution <- ggplot(noEffect_df,aes(x=analysis,y=name,fill=value)) +
+  geom_tile(size=1) +
+  geom_vline(xintercept = 5.5) +
+  theme_pubclean() +
+  theme(
+    axis.text.y = element_text(size=8, face='bold'),
+    axis.text.x = element_text(size=8,angle=90,hjust=1,vjust=0.25),
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank(),
+    legend.position = 'right',
+    legend.background = element_rect(size=1, linetype="solid", 
+                                     colour ="black")
+  ) +
+  labs(
+    title='NoEffect Log10(P) By Analysis Method',
+    fill='Log10 P-val'
+  ) +
+  scale_fill_gradient2(
+    midpoint=-2,
+    high='#332288',
+    mid='#BBBBBB',
+    low='#CC3311'
+  )
+print(noEff_distribution)
