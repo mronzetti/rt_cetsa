@@ -15,6 +15,7 @@ library(ggbeeswarm)
 library(cowplot)
 library(viridis)
 library(ggrepel)
+library(ggpubr)
 dir.create('./data/dr_curves/')
 #Read in experimental file
 raw_df <- read.csv('./data/fullexpdata.csv') %>%
@@ -146,6 +147,14 @@ ic50_distribution <- ggplot(ic50_df,aes(x=analysis,y=name,fill=value)) +
   geom_tile() +
   scale_fill_viridis(discrete=FALSE,direction = -1)
 print(ic50_distribution)
+png(
+  filename = './models/ic50_dist.png',
+  width = 3200,
+  height = 1800,
+  res = 300
+)
+print(ic50_distribution)
+dev.off()
 
 noEffect_df <- read.csv('./data/modelfit_params.csv') %>%
   dplyr::select(starts_with('analysis') | starts_with('noEffect'))
@@ -173,8 +182,16 @@ noEff_distribution <- ggplot(noEffect_df,aes(x=analysis,y=name,fill=value)) +
   ) +
   scale_fill_gradient2(
     midpoint=-2,
-    high='#332288',
+    high='#BBBBBB',
     mid='#BBBBBB',
-    low='#CC3311'
+    low='#EE3377'
   )
 print(noEff_distribution)
+png(
+  filename = './models/noEff_dist.png',
+  width = 3200,
+  height = 1800,
+  res = 300
+)
+print(noEff_distribution)
+dev.off()
